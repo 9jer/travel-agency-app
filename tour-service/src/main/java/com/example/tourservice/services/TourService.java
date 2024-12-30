@@ -59,7 +59,7 @@ public class TourService {
     @Transactional
     public void decreaseSeats(Long tourId) {
         Tour tour = tourRepository.findById(tourId)
-                .orElseThrow(() -> new RuntimeException("Tour not found"));
+                .orElseThrow(() -> new TourException("Tour not found"));
         if (tour.getAvailableSeats() <= 0) {
             throw new RuntimeException("No available seats");
         }
@@ -70,7 +70,7 @@ public class TourService {
     @Transactional
     public void increaseSeats(Long tourId) {
         Tour tour = tourRepository.findById(tourId)
-                .orElseThrow(() -> new RuntimeException("Tour not found"));
+                .orElseThrow(() -> new TourException("Tour not found"));
         tour.setAvailableSeats(tour.getAvailableSeats() + 1);
         tourRepository.save(tour);
     }
