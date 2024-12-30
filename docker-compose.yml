@@ -1,0 +1,209 @@
+version: '3.9'
+
+services:
+  discovery-server:
+    image: 90jer/discovery-server:latest
+    container_name: discovery-server
+    pull_policy: always
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    volumes:
+      - ./discovery-server/src/main/resources/application-docker.yml:/application-docker.yml
+
+  api-gateway:
+    image: 90jer/api-gateway:latest
+    container_name: api-gateway
+    pull_policy: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - discovery-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY= TRACE
+    volumes:
+      - ./api-gateway/src/main/resources/application-docker.yml:/application-docker.yml
+
+  api-gateway-mobile:
+    image: 90jer/api-gateway-mobile:latest
+    container_name: api-gateway-mobile
+    ports:
+      - "8084:8084"
+    depends_on:
+      - discovery-server
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY= TRACE
+    volumes:
+      - ./api-gateway-mobile/src/main/resources/application-docker.yml:/application-docker.yml
+
+  tour-service:
+    image: 90jer/tour-service:latest
+    container_name: tour-service
+    pull_policy: always
+    ports:
+      - "8081:8081"
+    depends_on:
+      - discovery-server
+      - postgres-tour
+      - api-gateway
+      - api-gateway-mobile
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-tour:5432/tour_service_db
+    volumes:
+      - ./tour-service/src/main/resources/application-docker.yml:/application-docker.yml
+
+  postgres-tour:
+    image: postgres:latest
+    container_name: postgres-tour
+    environment:
+      POSTGRES_DB: tour_service_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_tour:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  tour-user-service:
+    image: 90jer/tour-user-service:latest
+    container_name: tour-user-service
+    pull_policy: always
+    ports:
+      - "8082:8082"
+    depends_on:
+      - discovery-server
+      - postgres-tour-user
+      - api-gateway-mobile
+      - api-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-tour-user:5432/tour_user_service_db
+    volumes:
+      - ./tour-user-service/src/main/resources/application-docker.yml:/application-docker.yml
+
+  postgres-tour-user:
+    image: postgres:latest
+    container_name: postgres-tour-user
+    environment:
+      POSTGRES_DB: tour_user_service_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - pg_tour_user:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  tour-booking-service:
+    image: 90jer/tour-booking-service:latest
+    container_name: tour-booking-service
+    pull_policy: always
+    ports:
+      - "8083:8083"
+    depends_on:
+      - discovery-server
+      - postgres-tour-booking
+      - kafka
+      - api-gateway
+      - api-gateway-mobile
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-tour-booking:5432/tour_booking_service_db
+    volumes:
+      - ./tour-booking-service/src/main/resources/application-docker.yml:/application-docker.yml
+
+  postgres-tour-booking:
+    image: postgres:latest
+    container_name: postgres-tour-booking
+    environment:
+      POSTGRES_DB: tour_booking_service_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - pg_tour_booking:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    hostname: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    volumes:
+      - ./tour-booking-service/config/kafka.properties:/etc/kafka/kafka.properties
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8090:8080"
+    restart: always
+    environment:
+      KAFKA_CLUSTERS_NAME: local
+      KAFKA_CLUSTERS_BOOTSTRAPSERVERS: PLAINTEXT://kafka:9092
+      DYNAMIC_CONFIG_ENABLED: 'true'
+    depends_on:
+      - kafka
+
+  tour-notification-service:
+    image: 90jer/tour-notification-service:latest
+    container_name: tour-notification-service
+    pull_policy: always
+    ports:
+      - "8085:8085"
+    depends_on:
+      - discovery-server
+      - postgres-tour-notification
+      - kafka
+      - api-gateway-mobile
+      - api-gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-tour-notification:5432/tour_notification_service_db
+    volumes:
+      - ./tour-notification-service/src/main/resources/application-docker.yml:/application-docker.yml
+
+
+  postgres-tour-notification:
+    image: postgres:latest
+    container_name: postgres-tour-notification
+    environment:
+      POSTGRES_DB: tour_notification_service_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5436:5432"
+    volumes:
+      - pg_tour_notification:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pg_tour:
+  pg_tour_user:
+  pg_tour_booking:
+  pg_tour_notification:

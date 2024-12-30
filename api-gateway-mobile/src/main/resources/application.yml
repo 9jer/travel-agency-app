@@ -1,0 +1,29 @@
+spring:
+
+  application:
+    name: api-gateway-mobile
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  jwt:
+    secret: 4b6050b9a135b722dab15dabc4f22d246b705030ec5af354221550b89c735ed8
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: api-gateway-mobile-instance
+    prefer-ip-address: true
+
+logging:
+  level:
+    com.netflix.discovery: TRACE
+    com.netflix.eureka: TRACE
+
+server:
+  port: 8084
+

@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: tour-user-service
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5434/tour_user_service_db
+    username: postgres
+    password: postgres
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  doc:
+    swagger-ui:
+      path: /swagger-ui.html
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: tour-user-service-instance
+    prefer-ip-address: true
+
+jwt:
+  secret: 4b6050b9a135b722dab15dabc4f22d246b705030ec5af354221550b89c735ed8
+  lifetime: 30m
+
+server:
+  port: 8082

@@ -1,0 +1,13 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres-tour:5432/tour_service_db
+    username: postgres
+    password: postgres
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:password@discovery-server:8761/eureka

@@ -1,0 +1,17 @@
+version: '3.9'
+
+volumes:
+  pg_tour_notification:
+
+services:
+  tour_notification_service_db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=tour_notification_service_db
+    volumes:
+      - pg_tour_notification:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5436:5432"

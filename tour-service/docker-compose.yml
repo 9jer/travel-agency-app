@@ -1,0 +1,17 @@
+version: '3.9'
+
+volumes:
+  pg_tour:
+
+services:
+  tour_service_db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=tour_service_db
+    volumes:
+      - pg_tour:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5433:5432"
