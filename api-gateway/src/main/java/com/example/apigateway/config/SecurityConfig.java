@@ -3,6 +3,7 @@ package com.example.apigateway.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -18,6 +19,7 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                //.cors(Customizer.withDefaults())
                 .authorizeExchange(auth -> auth
                         .pathMatchers("/api/v1/auth/**", "/swagger-ui.html",
                                 "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**",

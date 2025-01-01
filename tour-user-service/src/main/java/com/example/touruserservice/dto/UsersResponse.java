@@ -12,5 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsersResponse {
-    private List<UserDTO> users;
+    private List<GetUserDTO> users;
 }

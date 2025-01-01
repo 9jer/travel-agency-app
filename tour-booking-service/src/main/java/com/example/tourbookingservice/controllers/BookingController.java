@@ -2,6 +2,7 @@ package com.example.tourbookingservice.controllers;
 
 import com.example.tourbookingservice.dto.BookingDTO;
 import com.example.tourbookingservice.dto.BookingsResponse;
+import com.example.tourbookingservice.dto.GetBookingDTO;
 import com.example.tourbookingservice.models.Booking;
 import com.example.tourbookingservice.models.BookingStatus;
 import com.example.tourbookingservice.util.BookingErrorResponse;
@@ -29,13 +30,13 @@ public class BookingController {
     @GetMapping
     public BookingsResponse getAllBookings() {
         return new BookingsResponse(bookingService.findAll().stream()
-                .map(this::convertToDTO)
+                .map(this::convertToGetBookingDTO)
                 .collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
-    public BookingDTO getBookingById(@PathVariable(name = "id") Long id) {
-        return convertToDTO(bookingService.findById(id));
+    public GetBookingDTO getBookingById(@PathVariable(name = "id") Long id) {
+        return convertToGetBookingDTO(bookingService.findById(id));
     }
 
     @PostMapping
@@ -69,6 +70,10 @@ public class BookingController {
         booking.setStatus(bookingDTO.getStatus());
 
         return booking;
+    }
+
+    private GetBookingDTO convertToGetBookingDTO(Booking booking) {
+        return modelMapper.map(booking, GetBookingDTO.class);
     }
 
     @ExceptionHandler

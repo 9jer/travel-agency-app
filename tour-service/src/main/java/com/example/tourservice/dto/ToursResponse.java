@@ -10,5 +10,5 @@ import java.util.List;
 @Getter
 @Setter
 public class ToursResponse {
-    private List<TourDTO> tours;
+    private List<GetTourDTO> tours;
 }

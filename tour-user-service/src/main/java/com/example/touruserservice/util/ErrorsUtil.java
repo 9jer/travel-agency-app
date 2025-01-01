@@ -6,6 +6,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class ErrorsUtil {
@@ -27,12 +28,12 @@ public class ErrorsUtil {
             throw new UserException("Incorrect password!");
         }
 
-        if(userByUsername.isPresent()){
+        if(userByUsername.isPresent() && !Objects.equals(saveUserDTO.getUsername(), userByUsername.get().getUsername())){
             throw new UserException("User with username " + saveUserDTO.getUsername()
                     + " already exist");
         }
 
-        if(userByEmail.isPresent()){
+        if(userByEmail.isPresent() && !Objects.equals(saveUserDTO.getEmail(), userByEmail.get().getEmail())){
             throw new UserException("Email " + saveUserDTO.getEmail()
                     + " address already in use!");
         }

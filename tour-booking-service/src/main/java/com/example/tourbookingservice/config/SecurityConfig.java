@@ -25,7 +25,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/bookings/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/bookings/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/bookings").hasAnyRole("ADMIN", "GUEST")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/bookings").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/bookings/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/bookings/**").hasRole("ADMIN")
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()

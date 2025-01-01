@@ -1,5 +1,6 @@
 package com.example.tourservice.controllers;
 
+import com.example.tourservice.dto.GetTourDTO;
 import com.example.tourservice.dto.TourDTO;
 import com.example.tourservice.dto.ToursResponse;
 import com.example.tourservice.models.Tour;
@@ -29,12 +30,12 @@ public class TourController {
     @ResponseStatus(HttpStatus.OK)
     public ToursResponse getAllTours() {
         return new ToursResponse(tourService.findAll().stream()
-                .map(this::convertTourtoTourDTO).collect(Collectors.toList()));
+                .map(this::convertTourToGetTourDTO).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
-    public TourDTO getTourById(@PathVariable("id") Long id) {
-        return convertTourtoTourDTO(tourService.findById(id));
+    public GetTourDTO getTourById(@PathVariable("id") Long id) {
+        return convertTourToGetTourDTO(tourService.findById(id));
     }
 
     @PostMapping
@@ -90,6 +91,10 @@ public class TourController {
 
     private TourDTO convertTourtoTourDTO(Tour tour) {
         return modelMapper.map(tour, TourDTO.class);
+    }
+
+    private GetTourDTO convertTourToGetTourDTO(Tour tour) {
+        return modelMapper.map(tour, GetTourDTO.class);
     }
 
     @ExceptionHandler

@@ -1,5 +1,6 @@
 package com.example.touruserservice.controllers;
 
+import com.example.touruserservice.dto.GetUserDTO;
 import com.example.touruserservice.dto.SaveUserDTO;
 import com.example.touruserservice.dto.UserDTO;
 import com.example.touruserservice.dto.UsersResponse;
@@ -28,7 +29,7 @@ public class UserController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public UsersResponse getAllUsers() {
-        return new UsersResponse(userService.findAll().stream().map(this::convertUserToUserDTO).toList());
+        return new UsersResponse(userService.findAll().stream().map(this::convertUserToGetUserDTO).toList());
     }
 
     @PatchMapping("/{id}")
@@ -51,8 +52,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDTO getUserById(@PathVariable("id") Long id) {
-        return convertUserToUserDTO(userService.getUserById(id));
+    public GetUserDTO getUserById(@PathVariable("id") Long id) {
+        return convertUserToGetUserDTO(userService.getUserById(id));
     }
 
     @PostMapping("/{id}/assign-admin")
@@ -77,6 +78,10 @@ public class UserController {
 
     private User convertUserDTOToUser(SaveUserDTO saveUserDTO){
         return modelMapper.map(saveUserDTO, User.class);
+    }
+
+    private GetUserDTO convertUserToGetUserDTO(User user){
+        return modelMapper.map(user, GetUserDTO.class);
     }
 
     @ExceptionHandler

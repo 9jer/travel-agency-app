@@ -10,5 +10,5 @@ import java.util.List;
 @Getter
 @Setter
 public class BookingsResponse {
-    private List<BookingDTO> bookings;
+    private List<GetBookingDTO> bookings;
 }
