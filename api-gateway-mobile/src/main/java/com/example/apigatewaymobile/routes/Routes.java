@@ -15,8 +15,8 @@ public class Routes {
                 .route("tour_service", r -> r.path("/api/v1/tours/**")
                         .uri("lb://tour-service"))
 
-                .route("user_service", r -> r.path("/api/v1/users/**")
-                        .uri("lb://tour-user-service"))
+                .route("booking_service", r -> r.path("/api/v1/bookings/**")
+                        .uri("lb://tour-booking-service"))
 
                 .route("auth_service", r -> r.path("/api/v1/auth/**")
                         .uri("lb://tour-user-service"))
