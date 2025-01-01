@@ -1,6 +1,7 @@
 package com.example.touruserservice.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,6 +32,7 @@ public class User implements UserDetails {
 
     @Column(name = "email")
     @NotEmpty(message = "Email should not be empty!")
+    @Email(message = "Email is incorrect!")
     private String email;
 
     @Column(name = "password")
