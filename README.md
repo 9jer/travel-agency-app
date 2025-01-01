@@ -6,29 +6,33 @@ This project is a backend system designed to support the administration and oper
 
 ### **Features**
 
-1. **User Management:**
+1. **Microservice Architecture**:
+
+    - Each service has its own dedicated database for data isolation and security.
+    - Supports both synchronous (e.g., REST API calls) and asynchronous (e.g., Kafka messaging) communication between services.
+2. **User Management:**
     
     - User registration and authentication.
     - Role-based access control (ADMIN, GUEST).
     - Assign and validate roles for users.
-2. **Tour Management:**
+3. **Tour Management:**
     
     - Retrieve and manage available tours.
     - Handle tour availability and seat bookings.
-3. **Booking System:**
+4. **Booking System:**
     
     - Create, view, and update bookings.
     - Automatically update tour availability based on bookings.
     - Integration with notification service.
-4. **Notification Service:**
+5. **Notification Service:**
     
     - Real-time notifications for booking actions (e.g., booking created, booking updated, etc.).
     - Kafka-based messaging integration.
     - Currently, notifications are stored as records in the `tour_notification_service_db` database, providing a centralized repository for booking-related events.
-5. **Swagger Integration:**
+6. **Swagger Integration:**
     
     - Comprehensive API documentation using Swagger.
-6. **Role-Based Authorization:**
+7. **Role-Based Authorization:**
     
     - Specific endpoints for `ADMIN` and `GUEST` users.
     - JWT-based authentication with roles.
