@@ -131,9 +131,9 @@ This project is a backend system designed to support the administration and oper
 
 ---
 
-### **Endpoints Overview**
+### **Overview of Selected Endpoints**
 
-#### **User Service**
+#### **Auth/User Service**
 
 | Method | Endpoint                  | Access | Description                  |
 | ------ | ------------------------- | ------ | ---------------------------- |
