@@ -23,7 +23,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/api/v1/tours/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/tours/**").hasAnyRole("ADMIN", "GUEST")
                         .requestMatchers(HttpMethod.POST, "/api/v1/tours/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/tours/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/tours/**").hasRole("ADMIN")
