@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "tour-service", url = "${spring.tour.service.url}", configuration = FeignClientConfig.class)
+@FeignClient("tour-service")
 public interface TourServiceClient {
 
     @GetMapping("/api/v1/tours/{id}")
