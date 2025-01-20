@@ -58,9 +58,9 @@ public class BookingService {
             throw new BookingException("No available seats for this tour");
         }
 
-        if(booking.getStatus() == BookingStatus.CONFIRMED){
+/*        if(booking.getStatus() == BookingStatus.CONFIRMED){
             tourServiceClient.decreaseAvailableSeats(booking.getTourId());
-        }
+        }*/
 
         //booking.setStatus(BookingStatus.PENDING);
         booking.setCreatedAt(LocalDateTime.now());
